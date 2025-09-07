@@ -1,11 +1,13 @@
-﻿@inject AlbumDbContext _context;
+﻿@using asp_album.Data
+@using asp_album.Models.Entity
+@inject ApplicationDBContext _context
 
 @{
-    var categories = _context.TCategories.ToList();
+    var categories = _context.AlbumCategories.ToList();
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="utf-8" />
@@ -13,55 +15,67 @@
     <title>@ViewData["Title"] - 電子相簿網</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/asp_album.styles.css" asp-append-version="true" />
 </head>
 
 <body>
     <header>
-        <div class="container">
-            <a class="navbar-brand" asp-action="Index">tibame電子相簿網</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" asp-action="Index">電子相簿網</a>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" id="navbardrop"
-                            data-bs-toggle="dropdown">
-                            相簿分類
-                        </a>
-                        <ul class="dropdown-menu">
-                            @foreach (var item in categories)
-                            {
-                                <li><a class="dropdown-item" asp-action="AlbumCategory"
-                                        asp-route-Cid="@item.FCid">@item.FCname</a></li>
-                            }
-                        </ul>
-                    </li>
+                <!-- 漢堡選單按鈕 -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-action="AlbumUpload">照片上傳</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-action="Login">登入管理</a>
-                    </li>
+                <!-- 導覽列內容 -->
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <!-- 相簿分類 Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                相簿分類
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbardrop">
+                                @foreach (var item in categories)
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-action="AlbumCategory" asp-route-id="@item.Id">
+                                            @item.Name
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
 
-                </ul>
+                        <!-- 登入 -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Login">登入管理</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
+        </nav>
     </header>
+
+    <!-- 主內容 -->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <!-- 頁尾 -->
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - asp_album - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - 電子相簿網建置 by <a href="#">洪英皓</a>
         </div>
     </footer>
+
+    <!-- 必要 JS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

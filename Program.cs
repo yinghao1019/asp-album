@@ -1,8 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+var connectionString = builder.Configuration.GetConnectionString("WebDatabase");
+builder.Services.AddDbContext<asp_album.Data.ApplicationDBContext>(
+    options =>
+    {
+        options.UseMySql(builder.Configuration.GetConnectionString("WebDatabase"), ServerVersion.AutoDetect(connectionString));
+    }
+);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
