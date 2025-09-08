@@ -137,7 +137,7 @@ namespace asp_album.Controllers
             return RedirectToAction("Index");
         }
 
-
+        // 會員列表
         public IActionResult MemberList()
         {
 
@@ -157,7 +157,7 @@ namespace asp_album.Controllers
             return View(members);
 
         }
-
+        // 會員新增
         public IActionResult MemberCreate()
         {
             return View();
@@ -195,7 +195,65 @@ namespace asp_album.Controllers
                 }
             }
             return View(memberCreateDTO);
-
         }
+
+        // 會員修改
+        public IActionResult MemberEdit(string Uid)
+        {
+
+            var member = _context.Members.FirstOrDefault(m => m.Uid == Uid);
+            return View(member);
+        }
+
+        [HttpPost]
+        public IActionResult MemberEdit(MemberEditDTO memberEditDTO)
+        {
+
+            if (ModelState.IsValid)
+            {
+                // TODO 檢查UID 與password 是否重複 
+                // TODO 密碼加密、可調整權限
+                try
+                {
+                    var member = _context.Members.FirstOrDefault(m => m.Uid == memberEditDTO.Uid);
+                    if (member != null)
+                    {
+                        member.Password = memberEditDTO.Password;
+                        member.Name = memberEditDTO.Name;
+                        member.Mail = memberEditDTO.Mail;
+                        member.UpdatedDate = DateTime.Now;
+                        _context.SaveChanges();
+                        TempData["Success"] = "會員修改成功";
+                        return RedirectToAction("MemberList");
+                    }
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "會員新增失敗";
+                    _logger.LogError(e, "Error creating member");
+                    ModelState.AddModelError(string.Empty, e.Message);
+                }
+            }
+            return View(memberEditDTO);
+        }
+
+        // 會員刪除
+        public IActionResult MemberDelete(string Uid)
+        {
+
+            var member = _context.Members.FirstOrDefault(m => m.Uid == Uid);
+            if (member == null)
+            {
+                TempData["Error"] = "會員刪除失敗";
+            }
+            else
+            {
+                _context.Members.Remove(member);
+                _context.SaveChanges();
+                TempData["Success"] = "會員刪除成功";
+            }
+            return RedirectToAction("MemberList");
+        }
+
     }
 }
