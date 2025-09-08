@@ -13,7 +13,9 @@ namespace asp_album.Models.Entity
         public int? MemberId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public string? AlbumPath { get; set; }
+        public string? ImgName { get; set; }
         public DateTime? ReleaseTime { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
     }
 }

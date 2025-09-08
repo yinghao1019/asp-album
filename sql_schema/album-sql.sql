@@ -1,5 +1,4 @@
 -- album.album_category definition
-
 CREATE TABLE `album_category` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -9,7 +8,6 @@ CREATE TABLE `album_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- album.`member` definition
-
 CREATE TABLE `member` (
   `id` int NOT NULL AUTO_INCREMENT,
   `uid` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -18,12 +16,14 @@ CREATE TABLE `member` (
   `password` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_date` datetime DEFAULT NULL,
   `updated_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `name` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_unique` (`uid`),
+  UNIQUE KEY `member_unique_1` (`password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- album.album definition
-
 CREATE TABLE `album` (
   `id` int NOT NULL AUTO_INCREMENT,
   `category_id` int DEFAULT NULL,
@@ -33,6 +33,7 @@ CREATE TABLE `album` (
   `release_time` datetime DEFAULT NULL,
   `created_date` datetime DEFAULT NULL,
   `updated_date` datetime DEFAULT NULL,
+  `img_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `album_album_category_FK` (`category_id`),
   KEY `album_member_FK` (`member_id`),

@@ -24,7 +24,19 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var albums = _context.Albums.OrderByDescending(a => a.ReleaseTime).Take(20).ToList();
+        var albums = _context.Albums.OrderByDescending(a => a.ReleaseTime).Join(
+         _context.Members,
+         album => album.MemberId,
+         member => member.Id,
+         (album, member) => new AlbumQueryDTO
+         {
+             Id = album.Id,
+             Title = album.Title,
+             Description = album.Description,
+             AlbumName = album.ImgName,
+             ReleaseTime = album.ReleaseTime,
+             MemberName = member.Name ?? "Unknown Member"
+         }).Take(20).ToList();
         return View(albums);
     }
 
@@ -46,7 +58,7 @@ public class HomeController : Controller
              Id = album.Id,
              Title = album.Title,
              Description = album.Description,
-             AlbumName = album.AlbumPath,
+             AlbumName = album.ImgName,
              ReleaseTime = album.ReleaseTime,
              CategoryName = categoryName,
              MemberName = member.Name ?? "Unknown Member"

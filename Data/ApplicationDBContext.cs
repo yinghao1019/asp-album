@@ -31,7 +31,9 @@ namespace asp_album.Data
                 entity.Property(e => e.CategoryId).HasColumnName("category_id");
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
                 entity.Property(e => e.Description).HasColumnName("description");
-
+                entity.Property(e => e.ImgName)
+                    .HasMaxLength(100)
+                    .HasColumnName("img_name");
                 entity.Property(e => e.ReleaseTime)
                     .HasColumnType("datetime")
                     .HasColumnName("release_time");
@@ -39,6 +41,14 @@ namespace asp_album.Data
                 entity.Property(e => e.Title)
                     .HasMaxLength(50)
                     .HasColumnName("title");
+
+                entity.Property(e => e.CreatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("created_date");
+
+                entity.Property(e => e.UpdatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_date");
             });
 
             modelBuilder.Entity<AlbumCategoryEntity>(entity =>
@@ -53,6 +63,14 @@ namespace asp_album.Data
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
                     .HasColumnName("name");
+
+                entity.Property(e => e.CreatedDate)
+           .HasColumnType("datetime")
+           .HasColumnName("created_date");
+
+                entity.Property(e => e.UpdatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_date");
             });
 
             modelBuilder.Entity<MemberEntity>(entity =>
@@ -77,6 +95,18 @@ namespace asp_album.Data
                 entity.Property(e => e.Password)
                     .HasMaxLength(50)
                     .HasColumnName("password");
+
+                entity.Property(e => e.Name)
+                .HasMaxLength(20)
+                .HasColumnName("name");
+
+                entity.Property(e => e.CreatedDate)
+           .HasColumnType("datetime")
+           .HasColumnName("created_date");
+
+                entity.Property(e => e.UpdatedDate)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_date");
             });
 
             OnModelCreatingPartial(modelBuilder);
