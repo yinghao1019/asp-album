@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,14 @@ builder.Services.AddDbContext<asp_album.Data.ApplicationDBContext>(
         options.UseMySql(builder.Configuration.GetConnectionString("WebDatabase"), ServerVersion.AutoDetect(connectionString));
     }
 );
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.LoginPath = new PathString("/Home/Index");
+    options.AccessDeniedPath = new PathString("/Home/AccessDenied");
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,7 +35,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
