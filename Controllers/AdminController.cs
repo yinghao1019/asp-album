@@ -136,5 +136,66 @@ namespace asp_album.Controllers
             TempData["Success"] = "相簿分類刪除成功";
             return RedirectToAction("Index");
         }
+
+
+        public IActionResult MemberList()
+        {
+
+            var members = from m in _context.Members
+                          where m.Role != "Admin"
+                          orderby m.Id
+                          select new MemberQueryDTO
+                          {
+                              Id = m.Id,
+                              Name = m.Name,
+                              Role = m.Role,
+                              Mail = m.Mail,
+                              Uid = m.Uid,
+                              CreatedDate = m.CreatedDate,
+                              UpdatedDate = m.UpdatedDate
+                          };
+            return View(members);
+
+        }
+
+        public IActionResult MemberCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult MemberCreate(MemberCreateDTO memberCreateDTO)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                try
+                {
+                    var member = new MemberEntity
+                    {
+                        Uid = memberCreateDTO.Uid,
+                        Password = memberCreateDTO.Password,
+                        Name = memberCreateDTO.Name,
+                        Mail = memberCreateDTO.Mail,
+                        Role = "Member",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    };
+                    _context.Members.Add(member);
+                    _context.SaveChanges();
+                    TempData["Success"] = "會員新增成功";
+                    return RedirectToAction("MemberList");
+                }
+                catch (Exception e)
+                {
+                    TempData["Error"] = "會員新增失敗";
+                    _logger.LogError(e, "Error creating member");
+                    ModelState.AddModelError(string.Empty, e.Message);
+                }
+            }
+            return View(memberCreateDTO);
+
+        }
     }
 }
