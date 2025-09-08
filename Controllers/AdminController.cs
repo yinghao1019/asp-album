@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using asp_album.Data;
 using asp_album.Models.Dtos;
+using asp_album.Models.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +35,40 @@ namespace asp_album.Controllers
 
         }
 
+        public IActionResult CategoryCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CategoryCreate(AlbumCategoryDTO albumCategory)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var category = new AlbumCategoryEntity
+                    {
+                        Name = albumCategory.Name,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    };
+                    _context.AlbumCategories.Add(category);
+                    _context.SaveChanges();
+                    TempData["Success"] = "相簿分類新增成功";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["Error"] = "相簿分類新增失敗";
+                    _logger.LogError(ex, "Error creating category");
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                }
+            }
+            return View(albumCategory);
+        }
+
         //編輯相簿分類
         public IActionResult CategoryEdit(int Cid)
         {
@@ -53,7 +84,6 @@ namespace asp_album.Controllers
 
         }
 
-        //Admin/Index，取得所有分類記錄
         [HttpPost]
         public IActionResult CategoryEdit([FromForm] AlbumCategoriesDTO albumCategoriesDTO)
         {
@@ -77,6 +107,34 @@ namespace asp_album.Controllers
                 }
             }
             return View(albumCategoriesDTO);
+        }
+
+
+        //刪除相簿分類
+        public IActionResult CategoryDelete([FromRoute] int Cid)
+        {
+
+            var categories = _context.AlbumCategories.FirstOrDefault(c => c.Id == Cid);
+
+            if (categories == null)
+            {
+                TempData["Error"] = "相簿分類刪除失敗";
+                return RedirectToAction("Index");
+            }
+            var albums = _context.Albums.Where(a => a.CategoryId == Cid);
+            foreach (var album in albums)
+            {
+                var filePath = Path.Combine(_path, album.ImgName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                _context.Albums.RemoveRange(album);
+                _context.AlbumCategories.Remove(categories);
+                _context.SaveChanges();
+            }
+            TempData["Success"] = "相簿分類刪除成功";
+            return RedirectToAction("Index");
         }
     }
 }
