@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using asp_album.Models;
 using asp_album.Data;
 using asp_album.Models.Dtos;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace asp_album.Controllers;
 
@@ -52,6 +55,49 @@ public class HomeController : Controller
         return View(albums);
     }
 
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Login(MemberLoginDTO loginDto)
+    {
+
+
+        if (ModelState.IsValid)
+        {
+            var member = _context.Members
+               .FirstOrDefault(m => m.Uid == loginDto.uid && m.Password == loginDto.password);
+            if (member != null)
+            {
+                IList<Claim> claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, member.Uid),
+                        new Claim(ClaimTypes.Role, member.Role)
+                    };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties { IsPersistent = true };
+
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+                TempData["Success"] = "登入成功";
+                //TODO nav bar 判斷是否role , 有的話多一個顯示後台管理的選項可前往
+                return RedirectToAction("Index", member.Role);   //前往會員對應的控制器
+            }
+        }
+        TempData["Error"] = "帳密錯誤，請重新檢查";
+        return View();
+    }
+
+    //Home/Logout，登出作業
+    public IActionResult Logout()
+    {
+        HttpContext.SignOutAsync();
+        return RedirectToAction("Index");
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
