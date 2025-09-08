@@ -27,7 +27,7 @@ namespace asp_album.Data
                 entity.ToTable("album");
 
                 entity.Property(e => e.Id);
-
+                entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.CategoryId).HasColumnName("category_id");
                 entity.Property(e => e.MemberId).HasColumnName("member_id");
                 entity.Property(e => e.Description).HasColumnName("description");
@@ -38,7 +38,7 @@ namespace asp_album.Data
 
                 entity.Property(e => e.Title)
                     .HasMaxLength(50)
-                    .HasColumnName("Title");
+                    .HasColumnName("title");
             });
 
             modelBuilder.Entity<AlbumCategoryEntity>(entity =>
