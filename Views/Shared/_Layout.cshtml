@@ -52,9 +52,24 @@
                         </li>
 
                         <!-- 登入 -->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="Login">登入管理</a>
-                        </li>
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            @if (User.IsInRole("ADMIN"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Admin">後台管理</a></li>
+                            }
+
+                            <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Member">相簿管理</a>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" asp-action="Logout">會員登出</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Login">登入管理</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

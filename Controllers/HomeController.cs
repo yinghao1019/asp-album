@@ -6,6 +6,7 @@ using asp_album.Models.Dtos;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using BCrypt.Net;
 
 namespace asp_album.Controllers;
 
@@ -80,8 +81,8 @@ public class HomeController : Controller
         if (ModelState.IsValid)
         {
             var member = _context.Members
-               .FirstOrDefault(m => m.Uid == loginDto.uid && m.Password == loginDto.password);
-            if (member != null)
+               .FirstOrDefault(m => m.Uid == loginDto.Uid);
+            if (member != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, member.Password))
             {
                 IList<Claim> claims = new List<Claim>
                     {
@@ -96,8 +97,7 @@ public class HomeController : Controller
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
                 TempData["Success"] = "登入成功";
-                //TODO nav bar 判斷是否role , 有的話多一個顯示後台管理的選項可前往
-                return RedirectToAction("Index", member.Role);   //前往會員對應的控制器
+                return RedirectToAction("Index");   //前往會員對應的控制器
             }
         }
         TempData["Error"] = "帳密錯誤，請重新檢查";

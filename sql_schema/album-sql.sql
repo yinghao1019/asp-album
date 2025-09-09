@@ -18,8 +18,7 @@ CREATE TABLE `member` (
   `updated_date` datetime DEFAULT NULL,
   `name` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `member_unique` (`uid`),
-  UNIQUE KEY `member_unique_1` (`password`)
+  UNIQUE KEY `member_unique` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 

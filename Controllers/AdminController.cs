@@ -175,7 +175,7 @@ namespace asp_album.Controllers
                     var member = new MemberEntity
                     {
                         Uid = memberCreateDTO.Uid,
-                        Password = memberCreateDTO.Password,
+                        Password = BCrypt.Net.BCrypt.HashPassword(memberCreateDTO.Password),
                         Name = memberCreateDTO.Name,
                         Mail = memberCreateDTO.Mail,
                         Role = "Member",
@@ -211,14 +211,12 @@ namespace asp_album.Controllers
 
             if (ModelState.IsValid)
             {
-                // TODO 檢查UID 與password 是否重複 
-                // TODO 密碼加密、可調整權限
+                // TODO 可調整權限
                 try
                 {
                     var member = _context.Members.FirstOrDefault(m => m.Uid == memberEditDTO.Uid);
                     if (member != null)
                     {
-                        member.Password = memberEditDTO.Password;
                         member.Name = memberEditDTO.Name;
                         member.Mail = memberEditDTO.Mail;
                         member.UpdatedDate = DateTime.Now;
