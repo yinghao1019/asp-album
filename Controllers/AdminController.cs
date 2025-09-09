@@ -3,6 +3,7 @@ using asp_album.Models.Dtos;
 using asp_album.Models.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace asp_album.Controllers
 {
@@ -287,6 +288,25 @@ namespace asp_album.Controllers
              })
          .ToList();
             return View(albums);
+        }
+
+
+        // delete images
+        public IActionResult AlbumDelete(int albumId)
+        {
+            var album = _context.Albums.Where(album => album.Id == albumId).FirstOrDefault();
+
+            if (album == null)
+            {
+                TempData["Failed"] = "刪除失敗";
+            }
+            else
+            {
+                _context.Remove(album);
+                _context.SaveChanges();
+                TempData["Success"] = "刪除成功";
+            }
+            return RedirectToAction("AlbumCategory", new { id = album.CategoryId });
         }
 
     }

@@ -19,7 +19,10 @@
 
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                         data-bs-target="#myModal_@item.Id">詳細資料</button>
-
+                    <div class="card-text text-secondary">
+                        <a asp-action="AlbumDelete" asp-route-AlbumId="@item.Id" class="btn btn-danger"
+                            onclick="return confirm('確定刪除嗎')">刪除</a>
+                    </div>
                 </div>
             </div>
         </div>
