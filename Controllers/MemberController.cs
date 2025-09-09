@@ -35,11 +35,26 @@ namespace asp_album.Controllers
 
         public IActionResult AlbumList([FromRoute] int id)
         {
-            ViewBag.CategoryName = _context.AlbumCategories
-              .FirstOrDefault(category => category.Id == id)?
-              .Name;
+            var categoryName = _context.AlbumCategories
+               .FirstOrDefault(category => category.Id == id)?
+               .Name;
+            ViewBag.CategoryName = categoryName;
             var memberId = getCurrentUserId();
-            var albums = _context.Albums.Where(a => a.CategoryId == id && a.MemberId == memberId).OrderByDescending(m => m.Id).ToList();
+            var albums = _context.Albums.Where(a => a.CategoryId == id && a.MemberId == memberId).OrderByDescending(m => m.Id).Join(
+            _context.Members,
+            album => album.MemberId,
+            member => member.Id,
+            (album, member) => new AlbumQueryDTO
+            {
+                Id = album.Id,
+                Title = album.Title,
+                Description = album.Description,
+                AlbumName = album.ImgName,
+                ReleaseTime = album.ReleaseTime,
+                CategoryName = categoryName ?? "Unknown category",
+                MemberName = member.Name ?? "Unknown Member"
+            })
+        .ToList();
             return View(albums);
         }
 

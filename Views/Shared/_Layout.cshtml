@@ -19,31 +19,28 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-info bg-info">
             <div class="container">
-                <a class="navbar-brand" asp-action="Index">電子相簿網</a>
+                <a class="navbar-brand text-white" asp-action="Index">電子相簿網</a>
 
-                <!-- 漢堡選單按鈕 -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse"
                     data-bs-target="#collapsibleNavbar" aria-controls="collapsibleNavbar" aria-expanded="false"
                     aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <!-- 導覽列內容 -->
                 <div class="collapse navbar-collapse" id="collapsibleNavbar">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <!-- 相簿分類 Dropdown -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" role="button"
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbardrop" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 相簿分類
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbardrop">
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbardrop">
                                 @foreach (var item in categories)
                                 {
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Home" asp-action="AlbumCategory"
+                                        <a class="dropdown-item text-white" asp-controller="Home" asp-action="AlbumCategory"
                                             asp-route-id="@item.Id">
                                             @item.Name
                                         </a>
@@ -52,27 +49,24 @@
                             </ul>
                         </li>
 
-                        <!-- 登入 -->
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
                             @if (User.IsInRole("ADMIN"))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Admin">後台管理</a></li>
+                                <li class="nav-item"><a class="nav-link text-white" asp-action="Index"
+                                        asp-controller="Admin">後台管理</a></li>
                             }
 
-                            <li class="nav-item"><a class="nav-link" asp-action="Index" asp-controller="Member">相簿管理</a>
-                            </li>
-
-                            <li class="nav-item"><a class="nav-link" asp-action="AlbumUpload"
-                                    asp-controller="Member">上傳照片</a>
-                            </li>
-                            <li class="nav-item"><a class="nav-link" asp-action="Logout">會員登出</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link text-white" asp-action="Index"
+                                    asp-controller="Member">相簿管理</a></li>
+                            <li class="nav-item"><a class="nav-link text-white" asp-action="AlbumUpload"
+                                    asp-controller="Member">上傳照片</a></li>
+                            <li class="nav-item"><a class="nav-link text-white" asp-action="Logout">會員登出</a></li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-action="Login">登入管理</a>
+                                <a class="nav-link text-white" asp-action="Login">登入管理</a>
                             </li>
                         }
                     </ul>
@@ -82,7 +76,7 @@
     </header>
 
     <!-- 主內容 -->
-    <div class="container">
+    <div class="container mt-3">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
