@@ -11,17 +11,21 @@
         <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="control-label">帳號</label>
-                <input type="text" name="uid" required class="form-control" />
+                <label asp-for="Uid" class="control-label"></label>
+                <input asp-for="Uid" class="form-control" />
+                <span asp-validation-for="Uid" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">密碼</label>
-                <input type="password" name="password" required class="form-control" />
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" type="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <input type="submit" value="登入" class="btn btn-primary" />
+                <a asp-action="MemberCreate" class="btn btn-info"> 註冊會員</a>
             </div>
+
         </form>
     </div>
 </div>

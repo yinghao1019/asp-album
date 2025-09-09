@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using asp_album.Models;
 using asp_album.Data;
 using asp_album.Models.Dtos;
+using asp_album.Models.Entity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
@@ -76,19 +77,19 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Login(MemberLoginDTO loginDto)
     {
-
-
         if (ModelState.IsValid)
         {
             var member = _context.Members
-               .FirstOrDefault(m => m.Uid == loginDto.Uid);
+                .FirstOrDefault(m => m.Uid == loginDto.Uid);
+
+            // 使用 BCrypt.Verify 來驗證密碼
             if (member != null && BCrypt.Net.BCrypt.Verify(loginDto.Password, member.Password))
             {
                 IList<Claim> claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, member.Uid),
-                        new Claim(ClaimTypes.Role, member.Role)
-                    };
+            {
+                new Claim(ClaimTypes.Name, member.Uid),
+                new Claim(ClaimTypes.Role, member.Role)
+            };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties { IsPersistent = true };
@@ -96,13 +97,56 @@ public class HomeController : Controller
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
+
                 TempData["Success"] = "登入成功";
-                return RedirectToAction("Index");   //前往會員對應的控制器
+                return RedirectToAction("Index");
             }
         }
+
         TempData["Error"] = "帳密錯誤，請重新檢查";
         return View();
     }
+
+    //register member
+    public IActionResult MemberCreate()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult MemberCreate(MemberCreateDTO memberCreateDTO)
+    {
+
+        if (ModelState.IsValid)
+        {
+
+            try
+            {
+                var member = new MemberEntity
+                {
+                    Uid = memberCreateDTO.Uid,
+                    Password = BCrypt.Net.BCrypt.HashPassword(memberCreateDTO.Password),
+                    Name = memberCreateDTO.Name,
+                    Mail = memberCreateDTO.Mail,
+                    Role = "Member",
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now
+                };
+                _context.Members.Add(member);
+                _context.SaveChanges();
+                TempData["Success"] = "會員註冊成功";
+                return RedirectToAction("Login");
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = "會員註冊失敗";
+                _logger.LogError(e, "Error creating member");
+                ModelState.AddModelError(string.Empty, e.Message);
+            }
+        }
+        return View(memberCreateDTO);
+    }
+
 
     //Home/Logout，登出作業
     public IActionResult Logout()
