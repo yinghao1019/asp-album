@@ -61,12 +61,13 @@
                                     asp-controller="Member">相簿管理</a></li>
                             <li class="nav-item"><a class="nav-link text-white" asp-action="AlbumUpload"
                                     asp-controller="Member">上傳照片</a></li>
-                            <li class="nav-item"><a class="nav-link text-white" asp-action="Logout">會員登出</a></li>
+                            <li class="nav-item"><a class="nav-link text-white" asp-action="Logout"
+                                    asp-controller="Home">會員登出</a></li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-action="Login">登入管理</a>
+                                <a class="nav-link text-white" asp-controller="Home" asp-action="Login">登入管理</a>
                             </li>
                         }
                     </ul>

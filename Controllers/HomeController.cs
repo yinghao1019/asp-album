@@ -128,7 +128,7 @@ public class HomeController : Controller
                     Password = BCrypt.Net.BCrypt.HashPassword(memberCreateDTO.Password),
                     Name = memberCreateDTO.Name,
                     Mail = memberCreateDTO.Mail,
-                    Role = "Member",
+                    Role = "MEMBER",
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now
                 };
