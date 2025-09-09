@@ -142,7 +142,6 @@ namespace asp_album.Controllers
         {
 
             var members = from m in _context.Members
-                          where m.Role != "Admin"
                           orderby m.Id
                           select new MemberQueryDTO
                           {

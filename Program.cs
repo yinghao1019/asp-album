@@ -18,8 +18,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 {
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    options.LoginPath = new PathString("/Home/Index");
-    options.AccessDeniedPath = new PathString("/Home/AccessDenied");
+    options.LoginPath = new PathString("/Home/Login");
+    options.AccessDeniedPath = new PathString("/Home/NoAuthorization");
 });
 var app = builder.Build();
 
