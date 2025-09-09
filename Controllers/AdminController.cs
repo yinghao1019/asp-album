@@ -70,17 +70,21 @@ namespace asp_album.Controllers
         }
 
         //編輯相簿分類
-        public IActionResult CategoryEdit(int Cid)
+        public IActionResult CategoryEdit(int id)
         {
 
-            var categories = _context.AlbumCategories.FirstOrDefault(c => c.Id == Cid);
+            var categories = _context.AlbumCategories.FirstOrDefault(c => c.Id == id);
             if (categories == null)
             {
                 return RedirectToAction("Index");
             }
 
 
-            return View(categories);
+            return View(new AlbumCategoriesDTO
+            {
+                Id = categories.Id,
+                Name = categories.Name
+            });
 
         }
 
@@ -111,17 +115,17 @@ namespace asp_album.Controllers
 
 
         //刪除相簿分類
-        public IActionResult CategoryDelete([FromRoute] int Cid)
+        public IActionResult CategoryDelete([FromRoute] int id)
         {
 
-            var categories = _context.AlbumCategories.FirstOrDefault(c => c.Id == Cid);
+            var categories = _context.AlbumCategories.FirstOrDefault(c => c.Id == id);
 
             if (categories == null)
             {
                 TempData["Error"] = "相簿分類刪除失敗";
                 return RedirectToAction("Index");
             }
-            var albums = _context.Albums.Where(a => a.CategoryId == Cid);
+            var albums = _context.Albums.Where(a => a.CategoryId == id);
             foreach (var album in albums)
             {
                 var filePath = Path.Combine(_path, album.ImgName);
@@ -130,9 +134,10 @@ namespace asp_album.Controllers
                     System.IO.File.Delete(filePath);
                 }
                 _context.Albums.RemoveRange(album);
-                _context.AlbumCategories.Remove(categories);
-                _context.SaveChanges();
+
             }
+            _context.AlbumCategories.Remove(categories);
+            _context.SaveChanges();
             TempData["Success"] = "相簿分類刪除成功";
             return RedirectToAction("Index");
         }
@@ -250,6 +255,33 @@ namespace asp_album.Controllers
                 TempData["Success"] = "會員刪除成功";
             }
             return RedirectToAction("MemberList");
+        }
+
+        public IActionResult AlbumCategory([FromRoute] int id)
+        {
+            //依Cid分類編號取得相簿分類名稱
+            var categoryName = _context.AlbumCategories.FirstOrDefault(c => c.Id == id)?.Name ?? "Unknown Category";
+            ViewBag.CategoryName = categoryName;
+            //依Cid分類編號取得該分類的所有照片，並依發佈時間進行遞減排序
+            var albums = _context.Albums
+         .Where(a => a.CategoryId == id)
+         .OrderByDescending(a => a.ReleaseTime)
+         .Join(
+             _context.Members,
+             album => album.MemberId,
+             member => member.Id,
+             (album, member) => new AlbumQueryDTO
+             {
+                 Id = album.Id,
+                 Title = album.Title,
+                 Description = album.Description,
+                 AlbumName = album.ImgName,
+                 ReleaseTime = album.ReleaseTime,
+                 CategoryName = categoryName,
+                 MemberName = member.Name ?? "Unknown Member"
+             })
+         .ToList();
+            return View(albums);
         }
 
     }
