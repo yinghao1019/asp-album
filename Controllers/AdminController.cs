@@ -205,8 +205,13 @@ namespace asp_album.Controllers
         public IActionResult MemberEdit(string Uid)
         {
 
-            var member = _context.Members.FirstOrDefault(m => m.Uid == Uid);
-            return View(member);
+            var memberEdit = _context.Members.Where(m => m.Uid == Uid).Select(m => new MemberEditDTO
+            {
+                Uid = m.Uid,
+                Name = m.Name,
+                Mail = m.Mail
+            }).FirstOrDefault();
+            return View(memberEdit);
         }
 
         [HttpPost]
