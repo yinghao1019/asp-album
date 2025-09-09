@@ -1,0 +1,59 @@
+@using asp_album.Models.Dtos
+@model IEnumerable<AlbumQueryDTO>
+
+@{
+    ViewData["Title"] = "相簿分類";
+}
+
+<h4>相簿分類-@ViewBag.CategoryName</h4>
+
+<hr />
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AlbumName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <img src="~/Album/@item.AlbumName" style="width:180px">
+                    @*@Html.DisplayFor(modelItem => item.AlbumName)*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseTime)
+                </td>
+                <td>
+                    <a asp-action="AlbumDelete" asp-route-AlbumId="@item.Id" class="btn btn-danger"
+                        onclick="return confirm('確定刪除嗎')">刪除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
