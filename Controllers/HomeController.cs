@@ -21,7 +21,7 @@ public class HomeController : Controller
     {
         _logger = logger;
         _context = context;
-        _imageRootPath = $"{env.WebRootPath}\\Album";
+        _imageRootPath = $"{env.WebRootPath}/album";
     }
 
     public IActionResult Index()
@@ -42,14 +42,14 @@ public class HomeController : Controller
         return View(albums);
     }
 
-    public IActionResult AlbumCategory([FromQuery] int categoryId)
+    public IActionResult AlbumCategory([FromRoute] int id)
     {
         //依Cid分類編號取得相簿分類名稱
-        var categoryName = _context.AlbumCategories.FirstOrDefault(c => c.Id == categoryId)?.Name ?? "Unknown Category";
+        var categoryName = _context.AlbumCategories.FirstOrDefault(c => c.Id == id)?.Name ?? "Unknown Category";
         ViewBag.CategoryName = categoryName;
         //依Cid分類編號取得該分類的所有照片，並依發佈時間進行遞減排序
         var albums = _context.Albums
-     .Where(a => a.CategoryId == categoryId)
+     .Where(a => a.CategoryId == id)
      .OrderByDescending(a => a.ReleaseTime)
      .Join(
          _context.Members,

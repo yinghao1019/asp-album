@@ -15,7 +15,7 @@ namespace asp_album.Controllers
         public AdminController(ApplicationDBContext context, IWebHostEnvironment hostEnvironment, ILogger<AdminController> logger)
         {
             _context = context;
-            _path = $"{hostEnvironment.WebRootPath}\\Album";
+            _path = $"{hostEnvironment.WebRootPath}/album";
             _logger = logger;
         }
         //Admin/Index，取得所有分類記錄

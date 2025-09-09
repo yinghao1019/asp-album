@@ -18,12 +18,18 @@ namespace asp_album.Controllers
         {
             _logger = logger;
             _context = context;
-            _imageRootPath = $"{env.WebRootPath}\\Album";
+            _imageRootPath = $"{env.WebRootPath}/album";
         }
 
         public IActionResult Index()
         {
-            var categories = _context.AlbumCategories.OrderByDescending(m => m.Id).ToList();
+            var categories = _context.AlbumCategories.OrderByDescending(m => m.Id).Select(c => new AlbumCategoryDTO
+            {
+                Id = c.Id,
+                Name = c.Name,
+                CreatedDate = c.CreatedDate,
+                UpdatedDate = c.UpdatedDate
+            }).ToList();
             return View(categories);
         }
 
