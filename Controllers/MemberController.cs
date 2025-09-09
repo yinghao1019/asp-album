@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace asp_album.Controllers
 {
-    [Authorize(Roles = "Member")]
+    [Authorize(Roles = "MEMBER")]
     public class MemberController : Controller
     {
         private readonly ILogger<MemberController> _logger;

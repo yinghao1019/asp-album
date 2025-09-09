@@ -147,7 +147,10 @@ public class HomeController : Controller
         return View(memberCreateDTO);
     }
 
-
+    public IActionResult NoAuthorization()
+    {
+        return View();
+    }
     //Home/Logout，登出作業
     public IActionResult Logout()
     {
