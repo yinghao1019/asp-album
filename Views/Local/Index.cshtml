@@ -1,0 +1,10 @@
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<h1>@Localizer["Hello"]</h1>
+<div>
+    CurrentCulture: @CultureInfo.CurrentCulture.Name <br />
+    CurrentUICulture: @CultureInfo.CurrentUICulture.Name <br /></div>
+<div>
+    <h2>@Localizer["Hello"]</h2>
+</div>
