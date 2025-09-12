@@ -41,5 +41,5 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.MapGet("/Hello", () => $"Environment:{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")} , MySettings:{app.Configuration["MySettings"]}");
 app.Run();
