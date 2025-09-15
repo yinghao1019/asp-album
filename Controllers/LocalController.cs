@@ -17,8 +17,6 @@ namespace asp_album.Controllers
         }
         public IActionResult Index()
         {
-            throw new NotFoundException("not found");
-
             return View();
         }
     }

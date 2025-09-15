@@ -45,7 +45,7 @@ var connectionString = builder.Configuration.GetConnectionString("WebDatabase");
 builder.Services.AddDbContext<asp_album.Data.ApplicationDBContext>(
     options =>
     {
-        options.UseMySql(builder.Configuration.GetConnectionString("WebDatabase"), ServerVersion.AutoDetect(connectionString));
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 );
 
