@@ -1,4 +1,5 @@
 using System.Globalization;
+using asp_album.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Localization.Routing;
@@ -64,6 +65,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseRequestLocalization();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
