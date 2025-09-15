@@ -21,15 +21,15 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.DefaultRequestCulture = new RequestCulture(currentCulture);
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
-    options.RequestCultureProviders = new[]
-    {
-        new RouteDataRequestCultureProvider()
-        {
-            // Route 參數名稱
-            RouteDataStringKey = "culture",
-            UIRouteDataStringKey = "culture"
-        }
-    };
+    // options.RequestCultureProviders = new[]
+    // {
+    //     new RouteDataRequestCultureProvider()
+    //     {
+    //         // Route 參數名稱
+    //         RouteDataStringKey = "culture",
+    //         UIRouteDataStringKey = "culture"
+    //     }
+    // };
 
     // 在回應標頭中加入 Content-Language 標頭，告知用戶端此份 HTTP 內容的語言為何
     options.ApplyCurrentCultureToResponseHeaders = true;
@@ -60,15 +60,15 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseRequestLocalization();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+app.UseRequestLocalization();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{culture=en}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();
